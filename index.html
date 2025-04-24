@@ -2,29 +2,58 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>脱出ゲーム ヒント一覧</title>
   <style>
     body { font-family: sans-serif; padding: 1rem; }
-    details { margin-bottom: 1rem; border: 1px solid #ccc; border-radius: 4px; padding: 0.5rem; }
-    summary { font-weight: bold; cursor: pointer; }
+    .hint { margin-bottom: 1rem; border: 1px solid #ccc; border-radius: 4px; padding: 0.5rem; }
+    .hint-title { font-weight: bold; cursor: pointer; }
+    .hidden-hint { display: none; margin-top: 0.5rem; padding: 0.5rem; background: #f9f9f9; border: 1px dashed #aaa; }
+    .showing { display: block; }
+    .hint-button {
+      display: inline-block;
+      margin-top: 0.5rem;
+      padding: 0.3rem 0.6rem;
+      font-size: 0.9rem;
+      border: 1px solid #888;
+      border-radius: 4px;
+      background: #e0e0e0;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
   <h1>ヒント一覧</h1>
-  <details>
-    <summary>【問題１】鍵のかかった箱を開けたい</summary>
+
+  <div class="hint">
+    <div class="hint-title">【問題１】鍵のかかった箱を開けたい</div>
     <p>ヒント１：箱の裏についた文字列をスマホで撮ってみましょう。</p>
-    <p>ヒント２：撮った写真を反転させると……？</p>
-    <details>
-        <summary>ヒント2も見る</summary>
-        <p>ヒント２：猫ですｙですｙ</p>
-    </details>
-  </details>
-  <details>
-    <summary>【問題２】暗号文を解読せよ</summary>
+    
+    <!-- ヒント2用のボタン -->
+    <div id="hint2-toggle" class="hint-button">ヒント２を見る</div>
+    <!-- 最初は隠しておく -->
+    <div id="hint2-text" class="hidden-hint">
+      ヒント２：撮った写真を反転させると……？
+    </div>
+  </div>
+
+  <div class="hint">
+    <div class="hint-title">【問題２】暗号文を解読せよ</div>
     <p>ヒント１：最初の５文字を逆から読んでみてください。</p>
-  </details>
+  </div>
+
+  <script>
+    // ヒント2の要素を取得
+    const btn2 = document.getElementById('hint2-toggle');
+    const text2 = document.getElementById('hint2-text');
+
+    // クリックで表示／非表示をトグル
+    btn2.addEventListener('click', () => {
+      const isShowing = text2.classList.toggle('showing');
+      // ボタン文言も切り替え
+      btn2.textContent = isShowing ? 'ヒント２を隠す' : 'ヒント２を見る';
+    });
+  </script>
 </body>
 </html>
