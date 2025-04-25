@@ -264,56 +264,62 @@
 					</details>
 				</div>
 				<script>
-	document.addEventListener("DOMContentLoaded", () => {
-		      document.querySelectorAll(".details").forEach(el => {
-		        const summary = el.querySelector(".summary");
-		        const answer = el.querySelector(".answer");
-		    
-		        summary.addEventListener("click", event => {
-		          event.stopPropagation();
-		          event.preventDefault();
-		    
-		          const isOpen = el.hasAttribute("open");
-		    
-		          if (isOpen) {
-		            const currentHeight = answer.scrollHeight;
-		            answer.style.height = currentHeight + "px";
-		            requestAnimationFrame(() => {
-		              answer.style.transition = "height 0.3s ease, opacity 0.3s ease";
-		              answer.style.height = "0px";
-		              answer.style.opacity = "0";
-		            });
-		    
-		            answer.addEventListener("transitionend", () => {
-		              el.removeAttribute("open");
-		              answer.style.removeProperty("height");
-		              answer.style.removeProperty("transition");
-		              answer.style.removeProperty("opacity");
-		            }, { once: true });
-		    
-		          } else {
-		            el.setAttribute("open", "true");
-		    
-		            // 初期状態を0にしてからscrollHeightを測る
-		            answer.style.height = "0px";
-		            answer.style.opacity = "0";
-		            requestAnimationFrame(() => {
-		              const targetHeight = answer.scrollHeight;
-		              answer.style.transition = "height 0.3s ease, opacity 0.3s ease";
-		              answer.style.height = targetHeight + "px";
-		              answer.style.opacity = "1";
-		            });
-		    
-		            // transition完了後、heightをautoに戻して自然な伸縮を許可
-		            answer.addEventListener("transitionend", () => {
-		              answer.style.removeProperty("height");
-		              answer.style.removeProperty("transition");
-		            }, { once: true });
-		          }
-		        });
-		      });
-		    });
-				</script>
+                    document.addEventListener("DOMContentLoaded", () => {
+                      document.querySelectorAll(".details").forEach(el => {
+                        const summary = el.querySelector(".summary");
+                        const answer = el.querySelector(".answer");
+                
+                        summary.addEventListener("click", event => {
+                          event.stopPropagation();
+                          event.preventDefault();
+                
+                          const isOpen = el.hasAttribute("open");
+                
+                          if (isOpen) {
+                            // 閉じる処理
+                            const currentHeight = answer.scrollHeight;
+                            answer.style.height = currentHeight + "px";
+                            requestAnimationFrame(() => {
+                              answer.style.transition = "height 0.3s ease, opacity 0.3s ease";
+                              answer.style.height = "0px";
+                              answer.style.opacity = "0";
+                            });
+                
+                            answer.addEventListener("transitionend", () => {
+                              // 親のopen属性を削除
+                              el.removeAttribute("open");
+                              // 子のdetailsも全て閉じる
+                              el.querySelectorAll(".details[open]").forEach(child => {
+                                child.removeAttribute("open");
+                              });
+                              // スタイルリセット
+                              answer.style.removeProperty("height");
+                              answer.style.removeProperty("transition");
+                              answer.style.removeProperty("opacity");
+                            }, { once: true });
+                
+                          } else {
+                            // 開く処理
+                            el.setAttribute("open", "true");
+                            answer.style.height = "0px";
+                            answer.style.opacity = "0";
+                            requestAnimationFrame(() => {
+                              const targetHeight = answer.scrollHeight;
+                              answer.style.transition = "height 0.3s ease, opacity 0.3s ease";
+                              answer.style.height = targetHeight + "px";
+                              answer.style.opacity = "1";
+                            });
+                
+                            answer.addEventListener("transitionend", () => {
+                              // 高さをautoに戻して柔軟に
+                              answer.style.removeProperty("height");
+                              answer.style.removeProperty("transition");
+                            }, { once: true });
+                          }
+                        });
+                      });
+                    });
+                  </script>
 			</div>
 		</details>
 	</div>
