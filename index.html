@@ -1,58 +1,85 @@
-<!-- puzzle.html -->
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>脱出ゲーム ヒント一覧</title>
   <style>
-    body { font-family: sans-serif; padding: 1rem; }
-    .hint { margin-bottom: 1rem; border: 1px solid #ccc; border-radius: 4px; padding: 0.5rem; }
-    .hint-title { font-weight: bold; cursor: pointer; }
-    .hidden-hint { display: none; margin-top: 0.5rem; padding: 0.5rem; background: #f9f9f9; border: 1px dashed #aaa; }
-    .showing { display: block; }
-    .hint-button {
-      display: inline-block;
-      margin-top: 0.5rem;
-      padding: 0.3rem 0.6rem;
-      font-size: 0.9rem;
-      border: 1px solid #888;
-      border-radius: 4px;
-      background: #e0e0e0;
-      cursor: pointer;
-    }
+    /* --- モノトーンUI用スタイル --- */
+    body { font-family: 'Helvetica Neue', Arial, sans-serif; padding: 1rem; margin: 0; background-color: #121212; color: #f5f5f5; }
+    h1 { text-align: center; margin-bottom: 1rem; font-size: 2rem; letter-spacing: 0.05em; }
+    .container { min-height: 100vh; padding: 20px; max-width: 600px; margin: 0 auto; }
+    .details { background-color: #1e1e1e; border: 1px solid #333; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.5); margin-bottom: 1rem; }
+    .summary { display: block; cursor: pointer; font-weight: bold; padding: 16px 20px; background-color: #000; color: #fff; position: relative; transition: background-color 0.3s; }
+    .summary::after { content: '▼'; position: absolute; right: 20px; transition: transform 0.3s; }
+    .details[open] .summary { background-color: #111; }
+    .details[open] .summary::after { transform: rotate(-180deg); }
+    .answer { max-height: 0; opacity: 0; transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out; }
+    .details[open] .answer { max-height: 500px; opacity: 1; }
+    .answerInner { padding: 16px 20px; background-color: #1a1a1a; color: #ddd; line-height: 1.6; }
+    @media (max-width: 480px) { .summary, .answerInner { padding: 12px 16px; } .summary::after { right: 16px; } }
   </style>
 </head>
 <body>
   <h1>ヒント一覧</h1>
+  <div class="container">
+    <!-- 親ヒント -->
+    <details class="details">
+      <summary class="summary">質問 1</summary>
+      <div class="answer">
+        <div class="answerInner">
+          回答 1
+          <!-- ネストされたサブディテール -->
+          <details class="details">
+            <summary class="summary">サブヒント</summary>
+            <div class="answer">
+              <div class="answerInner">サブ回答</div>
+            </div>
+          </details>
+        </div>
+      </div>
+    </details>
 
-  <div class="hint">
-    <div class="hint-title">【問題１】鍵のかかった箱を開けたい</div>
-    <p>ヒント１：箱の裏についた文字列をスマホで撮ってみましょう。</p>
-    
-    <!-- ヒント2用のボタン -->
-    <div id="hint2-toggle" class="hint-button">ヒント２を見る</div>
-    <!-- 最初は隠しておく -->
-    <div id="hint2-text" class="hidden-hint">
-      ヒント２：撮った写真を反転させると……？
-    </div>
-  </div>
-
-  <div class="hint">
-    <div class="hint-title">【問題２】暗号文を解読せよ</div>
-    <p>ヒント１：最初の５文字を逆から読んでみてください。</p>
+    <!-- 他のヒント -->
+    <details class="details">
+      <summary class="summary">質問 2</summary>
+      <div class="answer">
+        <div class="answerInner">回答 2</div>
+      </div>
+    </details>
+    <details class="details">
+      <summary class="summary">質問 3</summary>
+      <div class="answer">
+        <div class="answerInner">回答 3</div>
+      </div>
+    </details>
   </div>
 
   <script>
-    // ヒント2の要素を取得
-    const btn2 = document.getElementById('hint2-toggle');
-    const text2 = document.getElementById('hint2-text');
-
-    // クリックで表示／非表示をトグル
-    btn2.addEventListener('click', () => {
-      const isShowing = text2.classList.toggle('showing');
-      // ボタン文言も切り替え
-      btn2.textContent = isShowing ? 'ヒント２を隠す' : 'ヒント２を見る';
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelectorAll(".details").forEach(el => {
+        const summary = el.querySelector(".summary");
+        const answer = el.querySelector(".answer");
+        summary.addEventListener("click", event => {
+          // 親要素への伝播を防ぐ
+          event.stopPropagation();
+          // デフォルト動作抑制
+          event.preventDefault();
+          if (el.hasAttribute("open")) {
+            const closingAnim = answer.animate([
+              { height: answer.offsetHeight + "px", opacity: 1 },
+              { height: 0, opacity: 0 }
+            ], { duration: 300, easing: "ease-in-out" });
+            closingAnim.onfinish = () => el.removeAttribute("open");
+          } else {
+            el.setAttribute("open", "true");
+            answer.animate([
+              { height: 0, opacity: 0 },
+              { height: answer.offsetHeight + "px", opacity: 1 }
+            ], { duration: 300, easing: "ease-in-out" });
+          }
+        });
+      });
     });
   </script>
 </body>
