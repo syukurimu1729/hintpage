@@ -12,7 +12,6 @@
       --accent-dark:#6b4f37;
       --paper-bg:#f5ead6;
     }
-
     html,body{height:100%}
     body{
       margin:0;
@@ -61,7 +60,7 @@
     h2{ margin:0.35rem 0 0; font-family:"Cormorant Garamond", serif; font-weight:400; font-size:clamp(0.9rem,3.6vw,1.6rem); color:var(--accent-mid); }
     .explain{ margin-top:0.6rem; margin-bottom:0.6rem; font-size:clamp(0.78rem,2.2vw,1.05rem); color:var(--paper-ink); line-height:1.45; }
 
-    /* summary の装飾（左の / 風は summary のみに）*/
+    /* details 周り */
     .details{
       margin:0.9rem 0;
       border-radius:8px;
@@ -72,12 +71,12 @@
       overflow:visible;
     }
 
-    /* ここでは装飾を summary::before にして、高さが伸びないようにする */
+    /* summary と線（/）の間隔を広げる */
     .summary{
       display:block;
       cursor:pointer;
       font-weight:700;
-      padding:12px 18px;
+      padding:12px 18px 12px 44px; /* 左に余裕を追加 */
       margin:0;
       background:transparent;
       border:none;
@@ -89,17 +88,17 @@
       user-select:none;
     }
 
+    /* 装飾は summary のみにして高さは summary に依存する（伸びない）*/
     .summary::before{
       content:"/";
       position:absolute;
-      left:12px;
+      left:18px; /* 装飾とテキストの間隔を広くした */
       top:50%;
       transform:translateY(-50%) rotate(-18deg);
       font-size:1.25rem;
       color:rgba(107,79,55,0.9);
       opacity:0.95;
       pointer-events:none;
-      /* 固定表示にすることで展開で伸びない */
     }
 
     .summary::after{
@@ -117,7 +116,7 @@
       color:var(--accent-dark);
     }
 
-    /* 回答領域 */
+    /* 回答領域（高さは JS で制御）*/
     .answer{
       overflow:hidden;
       opacity:0;
@@ -125,7 +124,6 @@
       transition: height 0.26s ease, opacity 0.22s ease;
       will-change: height, opacity;
     }
-
     .details[open] > .answer{ opacity:1; }
 
     .answerInner{
@@ -137,7 +135,7 @@
       background: linear-gradient(180deg, rgba(255,255,255,0), rgba(250,245,235,0.02));
     }
 
-    /* ネストする小さな details はインデントして見やすく */
+    /* ネストした小さな details はインデント */
     .details .details{
       margin:0.6rem 0 0 0.6rem;
       border-radius:6px;
@@ -149,27 +147,26 @@
 
     @media (max-width:640px){
       .container{ padding:1rem; }
-      .summary{ padding:10px 14px; font-size:0.98rem; }
+      .summary{ padding:10px 14px 10px 36px; }
       .answerInner{ padding:10px 14px; font-size:0.95rem; }
-      .summary::before{ left:10px; font-size:1.05rem; }
+      .summary::before{ left:12px; font-size:1.05rem; }
     }
 
-    /* 微調整の視覚効果 */
     .summary:focus{ box-shadow:0 0 0 4px rgba(155,125,92,0.08); border-radius:6px; outline:none; }
   </style>
 </head>
 <body>
   <div class="container" id="hintContainer">
     <header>
-      <h1>魔法学校からの脱出</h1>
-      <h2>Escape from Magic School</h2>
+      <h1>コスモシアからの脱出</h1>
+      <h2>Escape from Cosmosia</h2>
       <p class="explain">
         これはコスモシアからの脱出のヒントページです<br>
         チーム内全体でヒントを見ることを決めてから見てください
       </p>
     </header>
 
-    <!-- ==== トップレベルの details はすべて siblings に配置（ネストを修正） ==== -->
+    <!-- ---------- コンテンツ（テキストは変更していません） ---------- -->
     <details class="details">
       <summary class="summary">居住モジュールへの入り方</summary>
       <div class="answer">
@@ -345,76 +342,161 @@
     (function(){
       const container = document.getElementById('hintContainer');
 
-      // イベントデリゲーションでパフォーマンス改善（リスナー1つ）
+      // utils
+      function getAncestorDetails(el){
+        const arr = [];
+        let p = el.parentElement;
+        while(p){
+          const d = p.closest && p.closest('.details');
+          if(!d) break;
+          arr.push(d);
+          p = d.parentElement;
+        }
+        return arr;
+      }
+
+      // アニメーションで高さを滑らかに遷移させるヘルパー
+      function animateHeight(element, from, to, opts = {duration:260, onEnd:null}){
+        // element: .answer element
+        element.style.height = from + 'px';
+        // force layout
+        element.getBoundingClientRect();
+        element.style.transition = 'height ' + (opts.duration/1000) + 's ease';
+        requestAnimationFrame(() => {
+          element.style.height = to + 'px';
+        });
+        const cleanup = (ev) => {
+          if(ev && ev.propertyName !== 'height') return;
+          element.style.removeProperty('height');
+          element.style.removeProperty('transition');
+          element.removeEventListener('transitionend', cleanup);
+          if(typeof opts.onEnd === 'function') opts.onEnd();
+        };
+        element.addEventListener('transitionend', cleanup);
+      }
+
+      // 祖先の高さを prev -> new にアニメーションする
+      function adjustAncestors(ancestors){
+        // ancestors: [{detail, answer, prevHeight}]
+        ancestors.forEach(a => {
+          const ans = a.answer;
+          // 新しい高さを取得（内容が変化した後に呼ぶこと）
+          const newH = ans.scrollHeight;
+          const prevH = a.prevHeight;
+          if(prevH === newH) return; // 差が無ければ何もしない
+          // animate from prevH to newH
+          animateHeight(ans, prevH, newH);
+        });
+      }
+
+      // クリックで開閉（イベントデリゲーション）
       container.addEventListener('click', (e) => {
         const summary = e.target.closest('.summary');
-        if (!summary || !container.contains(summary)) return;
-
-        // summary が属する .details を特定
-        const detailEl = summary.closest('.details');
-        if (!detailEl) return;
-
-        // stop native <details> toggle
+        if(!summary || !container.contains(summary)) return;
         e.preventDefault();
+        e.stopPropagation();
 
+        const detailEl = summary.closest('.details');
+        if(!detailEl) return;
         const answer = detailEl.querySelector('.answer');
+        if(!answer) return;
+
+        // クリック前に開いている祖先（親）要素の高さを記録
+        const ancestorDetails = [];
+        let p = detailEl.parentElement;
+        while(p){
+          const ancestor = p.closest && p.closest('.details');
+          if(!ancestor) break;
+          // only consider ancestors that are open, because closed ancestors don't need adjustments
+          if(ancestor.hasAttribute('open')){
+            const ans = ancestor.querySelector('.answer');
+            if(ans){
+              ancestorDetails.push({detail: ancestor, answer: ans, prevHeight: ans.scrollHeight});
+            }
+          }
+          p = ancestor.parentElement;
+        }
+
         const isOpen = detailEl.hasAttribute('open');
 
-        if (isOpen) {
-          // 閉じる：高さを現在の scrollHeight から 0 にトランジション
+        if(isOpen){
+          // close
           const currentH = answer.scrollHeight;
+          // animate height -> 0
           answer.style.height = currentH + 'px';
-          // 少し delay してトランジションを発火（ブラウザ互換）
           requestAnimationFrame(() => {
             answer.style.transition = 'height 0.26s ease, opacity 0.22s ease';
             answer.style.height = '0px';
             answer.style.opacity = '0';
           });
 
-          answer.addEventListener('transitionend', function handler(ev){
-            if (ev.propertyName !== 'height') return;
-            // 子の open は閉じる（必要なら）
+          // after transition, remove open and adjust ancestors (they will shrink)
+          const handler = (ev) => {
+            if(ev.propertyName !== 'height') return;
+            // close any opened children inside (clean)
             detailEl.querySelectorAll('.details[open]').forEach(child => child.removeAttribute('open'));
             detailEl.removeAttribute('open');
-            // クリーンアップ
+
+            // cleanup this answer's inline styles
             answer.style.removeProperty('height');
             answer.style.removeProperty('transition');
             answer.style.removeProperty('opacity');
-            answer.removeEventListener('transitionend', handler);
-          }, { once:true });
 
+            // after child's collapse took effect, compute new heights and animate ancestors
+            // Use next frame to ensure layout settled
+            requestAnimationFrame(() => {
+              adjustAncestors(ancestorDetails);
+            });
+
+            answer.removeEventListener('transitionend', handler);
+          };
+          answer.addEventListener('transitionend', handler);
         } else {
-          // 開く： open 属性を付けて 0 -> scrollHeight にトランジション
+          // open
+          // mark open early so scrollHeight includes children if any are open
           detailEl.setAttribute('open','');
-          // 初期状態を明示
+
+          // before animating this answer, capture current height (0)
+          // set explicit 0 height first
           answer.style.height = '0px';
           answer.style.opacity = '0';
           requestAnimationFrame(() => {
+            // calculate target
             const targetH = answer.scrollHeight;
             answer.style.transition = 'height 0.26s ease, opacity 0.22s ease';
             answer.style.height = targetH + 'px';
             answer.style.opacity = '1';
           });
 
-          answer.addEventListener('transitionend', function handler(ev){
-            if (ev.propertyName !== 'height') return;
-            // 自動高さに戻す
+          // when this answer finishes expanding, clear inline height and animate ancestors
+          const handler = (ev) => {
+            if(ev.propertyName !== 'height') return;
+            // clear this answer height to auto
             answer.style.removeProperty('height');
             answer.style.removeProperty('transition');
+
+            // After the child animation is complete, ancestors may need to grow
+            // Use next frame to ensure new layout is available
+            requestAnimationFrame(() => {
+              adjustAncestors(ancestorDetails);
+            });
+
             answer.removeEventListener('transitionend', handler);
-          }, { once:true });
+          };
+          answer.addEventListener('transitionend', handler);
         }
       });
 
-      // キーボード操作対応（Enter / Space で開閉）
+      // keyboard support for Enter / Space on summary
       container.addEventListener('keydown', (e) => {
-        const summary = e.target.closest('.summary');
-        if (!summary) return;
-        if (e.key === 'Enter' || e.key === ' ') {
+        const summary = e.target.closest && e.target.closest('.summary');
+        if(!summary) return;
+        if(e.key === 'Enter' || e.key === ' '){
           e.preventDefault();
           summary.click();
         }
       });
+
     })();
   </script>
 </body>
