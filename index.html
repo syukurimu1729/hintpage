@@ -1,456 +1,303 @@
 <!DOCTYPE html>
 <html lang="ja">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>脱出ゲーム ヒント一覧</title>
-
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&family=Noto+Serif+JP:wght@300;400;700&display=swap" rel="stylesheet">
-
   <style>
     :root{
       --paper-ink:#2e1f12;
       --accent-mid:#9b7d5c;
       --accent-dark:#6b4f37;
     }
-
     html,body{height:100%}
     body{
       margin:0;
-      padding:2rem 1rem;
-      font-family: "Noto Serif JP", Georgia, "Times New Roman", serif;
-      background:
-        radial-gradient(circle at 10% 10%, rgba(245,230,200,0.35), transparent 12%),
-        radial-gradient(circle at 90% 90%, rgba(230,210,170,0.30), transparent 12%),
-        linear-gradient(180deg, #efe6d1 0%, #f9f5ec 40%, #efe6d1 100%);
+      padding:1.5rem;
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      background:#f5f0e6;
       color:var(--paper-ink);
       -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      line-height:1.65;
     }
+    .container{ max-width:820px; margin:0 auto; background:linear-gradient(180deg,#fffaf0,#f7efe0); padding:1.2rem; border-radius:10px; box-shadow:0 6px 18px rgba(0,0,0,0.08); }
+    header{ text-align:center; margin-bottom:0.8rem; }
+    h1{ margin:0; font-size:1.6rem; color:var(--accent-dark); font-weight:700; }
+    h2{ margin:0.2rem 0 0; color:var(--accent-mid); font-size:1rem; }
+    .explain{ margin-top:0.6rem; margin-bottom:0.6rem; font-size:0.95rem; color:var(--paper-ink); }
 
-    .container{
-      max-width:820px;
-      margin:0 auto;
-      padding:1.5rem;
-      background: linear-gradient(180deg, rgba(255,251,240,0.95), rgba(244,232,210,0.98));
-      border-radius:12px;
-      border: 1px solid rgba(107,79,55,0.15);
-      box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-    }
+    .details{ margin:0.8rem 0; border-radius:8px; position:relative; border:1px solid rgba(90,65,45,0.12); background:linear-gradient(180deg,#fffefb,#fbf6ec); overflow:visible; }
+    /* 左のスラッシュ風とテキストの間隔を広めに */
+    .summary{ display:block; cursor:pointer; padding:14px 18px 14px 52px; margin:0; font-weight:700; position:relative; user-select:none; color:var(--accent-dark); }
+    .summary::before{ content:"/"; position:absolute; left:18px; top:50%; transform:translateY(-50%) rotate(-18deg); font-size:1.25rem; color:rgba(107,79,55,0.95); pointer-events:none; }
+    .summary::after{ content:"▼"; position:absolute; right:16px; top:50%; transform:translateY(-50%); transition:transform .28s; color:var(--accent-mid); }
+    .details[open] > .summary::after{ transform:rotate(-180deg); color:var(--accent-dark); }
 
-    header{ text-align:center; margin-bottom:1rem; position:relative; padding-bottom:0.4rem; }
-    h1{ font-family:"Cormorant Garamond", serif; margin:0; font-weight:700; letter-spacing:0.06em; font-size:clamp(1.25rem,4.5vw,2.5rem); color:var(--accent-dark); }
-    h2{ margin:0.35rem 0 0; font-family:"Cormorant Garamond", serif; font-weight:400; font-size:clamp(0.9rem,3.6vw,1.6rem); color:var(--accent-mid); }
-    .explain{ margin-top:0.6rem; margin-bottom:0.6rem; font-size:clamp(0.78rem,2.2vw,1.05rem); color:var(--paper-ink); line-height:1.45; }
+    .answer{ overflow:hidden; height:0; opacity:0; transition: height .32s ease, opacity .22s ease; will-change:height,opacity; }
+    .details[open] > .answer{ opacity:1; }
+    .answerInner{ padding:12px 18px; border-top:1px dashed rgba(120,90,60,0.08); background:transparent; line-height:1.6; }
 
-    /* details styling */
-    .details{
-      margin:0.9rem 0;
-      border-radius:8px;
-      position:relative;
-      border:1px solid rgba(90,65,45,0.12);
-      background: linear-gradient(180deg, rgba(255,255,250,0.9), rgba(247,240,228,0.95));
-      box-shadow: 0 6px 14px rgba(0,0,0,0.06);
-      overflow:visible;
-    }
-
-    /* ここで「/」とテキストの間を広げます（padding-left を増やす） */
-    .summary{
-      display:block;
-      cursor:pointer;
-      font-weight:700;
-      padding:14px 18px 14px 52px; /* 左に余裕を持たせて線とテキスト間隔を広げる */
-      margin:0;
-      background:transparent;
-      border:none;
-      color:var(--accent-dark);
-      font-size:1rem;
-      font-family:"Cormorant Garamond", serif;
-      letter-spacing:0.02em;
-      position:relative;
-      user-select:none;
-    }
-
-    /* 装飾（/）を summary のみにして高さが伸びないように */
-    .summary::before{
-      content:"/";
-      position:absolute;
-      left:18px;
-      top:50%;
-      transform:translateY(-50%) rotate(-18deg);
-      font-size:1.35rem;
-      color:rgba(107,79,55,0.95);
-      pointer-events:none;
-    }
-
-    .summary::after{
-      content:'▼';
-      position:absolute;
-      right:18px;
-      top:50%;
-      transform:translateY(-50%);
-      transition:transform 0.28s;
-      color:var(--accent-mid);
-    }
-    .details[open] > .summary::after { transform: rotate(-180deg); color:var(--accent-dark); }
-
-    .answer{
-      overflow:hidden;
-      opacity:0;
-      /* height を JS で操作するので初期は 0 */
-      height:0;
-      transition: height 0.28s ease, opacity 0.22s ease;
-      will-change: height, opacity;
-    }
-    .details[open] > .answer { opacity:1; }
-
-    .answerInner{
-      padding:12px 18px;
-      border-top:1px dashed rgba(120,90,60,0.08);
-      font-size:0.98rem;
-      color:var(--paper-ink);
-      line-height:1.6;
-      background: linear-gradient(180deg, rgba(255,255,255,0), rgba(250,245,235,0.02));
-    }
-
-    /* ネストした details はインデントして見やすく */
-    .details .details{
-      margin:0.6rem 0 0 0.6rem;
-      border-radius:6px;
-      padding-left:0.4rem;
-      background: linear-gradient(180deg, rgba(250,247,238,0.9), rgba(245,236,214,0.92));
-    }
-    .details .details > .summary{ padding:10px 12px 10px 36px; font-size:0.95rem; font-weight:600; }
-    .details .details > .answerInner{ padding:8px 12px; font-size:0.95rem; }
+    /* ネスト */
+    .details .details{ margin:0.6rem 0 0 0.6rem; border-radius:6px; background:linear-gradient(180deg,#fffcf8,#f9f3e7); }
+    .details .details > .summary{ padding:10px 12px 10px 36px; font-weight:600; }
+    .details .details > .answerInner{ padding:8px 12px; }
 
     @media (max-width:640px){
-      .container{ padding:1rem; }
-      .summary{ padding:12px 14px 12px 44px; }
-      .details .details > .summary{ padding:8px 10px 8px 30px; }
+      .summary{ padding-left:44px; }
+      .summary::before{ left:12px; }
     }
-
-    .summary:focus{ box-shadow:0 0 0 4px rgba(155,125,92,0.08); border-radius:6px; outline:none; }
   </style>
 </head>
-
 <body>
-  <div class="container">
+  <div class="container" id="container">
     <header>
       <h1>コスモシアからの脱出</h1>
       <h2>Escape from Cosmosia</h2>
-      <p class="explain">
-        これはコスモシアからの脱出のヒントページです<br>
-        チーム内全体でヒントを見ることを決めてから見てください
-      </p>
+      <p class="explain">これはコスモシアからの脱出のヒントページです<br>チーム内全体でヒントを見ることを決めてから見てください</p>
     </header>
 
-    <!-- === コンテンツ（中身は変更していません） === -->
+    <!-- 内容（テキストは不変） -->
     <details class="details">
       <summary class="summary">居住モジュールへの入り方</summary>
-      <div class="answer">
-        <div class="answerInner">Q1からQ4を解き、データベースからキーを入手する
+      <div class="answer"><div class="answerInner">Q1からQ4を解き、データベースからキーを入手する
           <details class="details">
             <summary class="summary">Q1のヒント</summary>
-            <div class="answer">
-              <div class="answerInner">線を記号同士でつなげ</div>
-            </div>
+            <div class="answer"><div class="answerInner">線を記号同士でつなげ</div></div>
           </details>
           <details class="details">
             <summary class="summary">Q2のヒント</summary>
-            <div class="answer">
-              <div class="answerInner">展開図を組み立てろ</div>
-            </div>
+            <div class="answer"><div class="answerInner">展開図を組み立てろ</div></div>
           </details>
           <details class="details">
             <summary class="summary">Q3のヒント</summary>
-            <div class="answer">
-              <div class="answerInner">50音表を考えろ</div>
-            </div>
+            <div class="answer"><div class="answerInner">50音表を考えろ</div></div>
           </details>
           <details class="details">
             <summary class="summary">Q4のヒント</summary>
-            <div class="answer">
-              <div class="answerInner">イラストを文字に直せ</div>
-            </div>
+            <div class="answer"><div class="answerInner">イラストを文字に直せ</div></div>
           </details>
           <details class="details">
             <summary class="summary">キー入手</summary>
-            <div class="answer">
-              <div class="answerInner">頭とは、頭文字のこと
-                <details class="details">
-                  <summary class="summary">追加ヒント</summary>
-                  <div class="answer">
-                    <div class="answerInner">頭文字をデータベースから探し、その中の文字がキー</div>
-                  </div>
-                </details>
-              </div>
-            </div>
+            <div class="answer"><div class="answerInner">頭とは、頭文字のこと
+              <details class="details">
+                <summary class="summary">追加ヒント</summary>
+                <div class="answer"><div class="answerInner">頭文字をデータベースから探し、その中の文字がキー</div></div>
+              </details>
+            </div></div>
           </details>
-        </div>
-      </div>
+        </div></div>
     </details>
 
     <details class="details">
       <summary class="summary">居住モジュールの謎</summary>
-      <div class="answer">
-        <div class="answerInner">日誌を読み、指示に従い、暗号化されたファイルを解読して情報を得る
+      <div class="answer"><div class="answerInner">日誌を読み、指示に従い、暗号化されたファイルを解読して情報を得る
           <details class="details">
             <summary class="summary">◇のヒント</summary>
-            <div class="answer">
-              <div class="answerInner">イラストを文字に直して当てはめろ</div>
-            </div>
+            <div class="answer"><div class="answerInner">イラストを文字に直して当てはめろ</div></div>
           </details>
           <details class="details">
             <summary class="summary">〇のヒント</summary>
-            <div class="answer">
-              <div class="answerInner">猫は英語でCAT
+            <div class="answer"><div class="answerInner">猫は英語でCAT
                 <details class="details">
                   <summary class="summary">追加ヒント</summary>
-                  <div class="answer">
-                    <div class="answerInner">3番目のアルファベットはC</div>
-                  </div>
+                  <div class="answer"><div class="answerInner">3番目のアルファベットはC</div></div>
                 </details>
-              </div>
-            </div>
+              </div></div>
           </details>
           <details class="details">
             <summary class="summary">△のヒント</summary>
-            <div class="answer">
-              <div class="answerInner">スマホの日本語入力</div>
-            </div>
+            <div class="answer"><div class="answerInner">スマホの日本語入力</div></div>
           </details>
           <details class="details">
             <summary class="summary">×のヒント</summary>
-            <div class="answer">
-              <div class="answerInner">四角の状態は、矢印によって対比を表されている
+            <div class="answer"><div class="answerInner">四角の状態は、矢印によって対比を表されている
                 <details class="details">
                   <summary class="summary">追加ヒント</summary>
-                  <div class="answer">
-                    <div class="answerInner">見えないものを見るには、表面だけでなく裏面も重要</div>
-                  </div>
+                  <div class="answer"><div class="answerInner">見えないものを見るには、表面だけでなく裏面も重要</div></div>
                 </details>
-              </div>
-            </div>
+              </div></div>
           </details>
           <details class="details">
             <summary class="summary">メモのヒント</summary>
-            <div class="answer">
-              <div class="answerInner">足し算の繰り上げは1しかありえない
+            <div class="answer"><div class="answerInner">足し算の繰り上げは1しかありえない
                 <details class="details">
                   <summary class="summary">追加ヒント</summary>
-                  <div class="answer">
-                    <div class="answerInner">bを足しても変わらないならbは？</div>
-                  </div>
+                  <div class="answer"><div class="answerInner">bを足しても変わらないならbは？</div></div>
                 </details>
-              </div>
-            </div>
+              </div></div>
           </details>
           <details class="details">
             <summary class="summary">電源のヒント</summary>
-            <div class="answer">
-              <div class="answerInner">日誌の裏にあるのが配線
+            <div class="answer"><div class="answerInner">日誌の裏にあるのが配線
                 <details class="details">
                   <summary class="summary">追加ヒント</summary>
-                  <div class="answer">
-                    <div class="answerInner">正しい色は、ラッキーカラー</div>
-                  </div>
+                  <div class="answer"><div class="answerInner">正しい色は、ラッキーカラー</div></div>
                 </details>
-              </div>
-            </div>
+              </div></div>
           </details>
           <details class="details">
             <summary class="summary">解読のヒント</summary>
-            <div class="answer">
-              <div class="answerInner">◇と〇を合わせて、穴に入った文字を読め</div>
-            </div>
+            <div class="answer"><div class="answerInner">◇と〇を合わせて、穴に入った文字を読め</div></div>
           </details>
-        </div>
-      </div>
+        </div></div>
     </details>
 
     <details class="details">
       <summary class="summary">実験モジュールへの入り方</summary>
-      <div class="answer">
-        <div class="answerInner">Q5からQ8を解き、データベースからキーを入手する
+      <div class="answer"><div class="answerInner">Q5からQ8を解き、データベースからキーを入手する
           <details class="details">
             <summary class="summary">Q5のヒント</summary>
-            <div class="answer">
-              <div class="answerInner">1年は12か月
+            <div class="answer"><div class="answerInner">1年は12か月
                 <details class="details">
                   <summary class="summary">追加ヒント</summary>
-                  <div class="answer">
-                    <div class="answerInner">3月は英語でmarch</div>
-                  </div>
+                  <div class="answer"><div class="answerInner">3月は英語でmarch</div></div>
                 </details>
-              </div>
-            </div>
+              </div></div>
           </details>
           <details class="details">
             <summary class="summary">Q6のヒント</summary>
-            <div class="answer">
-              <div class="answerInner">1つめのイラストはしょうじ</div>
-            </div>
+            <div class="answer"><div class="answerInner">1つめのイラストはしょうじ</div></div>
           </details>
           <details class="details">
             <summary class="summary">Q7のヒント</summary>
-            <div class="answer">
-              <div class="answerInner">「こ」に上の矢印で「け」になる
+            <div class="answer"><div class="answerInner">「こ」に上の矢印で「け」になる
                 <details class="details">
                   <summary class="summary">追加ヒント</summary>
-                  <div class="answer">
-                    <div class="answerInner">3月は英語でmarch</div>
-                  </div>
+                  <div class="answer"><div class="answerInner">3月は英語でmarch</div></div>
                 </details>
-              </div>
-            </div>
+              </div></div>
           </details>
           <details class="details">
             <summary class="summary">Q8のヒント</summary>
-            <div class="answer">
-              <div class="answerInner">ローマ字と記号から考えろ</div>
-            </div>
+            <div class="answer"><div class="answerInner">ローマ字と記号から考えろ</div></div>
           </details>
           <details class="details">
             <summary class="summary">キー入手のヒント</summary>
-            <div class="answer">
-              <div class="answerInner">頭は同じ、その文字を繋げたとき、繋げた線を通る文字は</div>
-            </div>
+            <div class="answer"><div class="answerInner">頭は同じ、その文字を繋げたとき、繋げた線を通る文字は</div></div>
           </details>
-        </div>
-      </div>
+        </div></div>
     </details>
 
     <details class="details">
       <summary class="summary">実験モジュールの謎</summary>
-      <div class="answer">
-        <div class="answerInner">RNA配列を解き、ウイルスとワクチンのサンプルを得る
+      <div class="answer"><div class="answerInner">RNA配列を解き、ウイルスとワクチンのサンプルを得る
           <details class="details">
             <summary class="summary">解読のヒント</summary>
-            <div class="answer">
-              <div class="answerInner">暗いところで星は見れる</div>
-            </div>
+            <div class="answer"><div class="answerInner">暗いところで星は見れる</div></div>
           </details>
           <details class="details">
             <summary class="summary">翻訳のヒント</summary>
-            <div class="answer">
-              <div class="answerInner">周りに初めからヒントはある</div>
-            </div>
+            <div class="answer"><div class="answerInner">周りに初めからヒントはある</div></div>
           </details>
-        </div>
-      </div>
+        </div></div>
     </details>
 
     <details class="details">
       <summary class="summary">コックピットへの入り方</summary>
-      <div class="answer">
-        <div class="answerInner">コックピットのコードを入手する
+      <div class="answer"><div class="answerInner">コックピットのコードを入手する
           <details class="details">
             <summary class="summary">手がかりへのヒント</summary>
-            <div class="answer">
-              <div class="answerInner">コックピットにも裏面はある</div>
-            </div>
+            <div class="answer"><div class="answerInner">コックピットにも裏面はある</div></div>
           </details>
           <details class="details">
             <summary class="summary">秘密のキーのヒント</summary>
-            <div class="answer">
-              <div class="answerInner">
-                RNA配列はQ1からQ8の模様に隠されている
+            <div class="answer"><div class="answerInner">RNA配列はQ1からQ8の模様に隠されている
                 <details class="details">
                   <summary class="summary">追加ヒント</summary>
-                  <div class="answer">
-                    <div class="answerInner">色からRNA配列に変換できる</div>
-                  </div>
+                  <div class="answer"><div class="answerInner">色からRNA配列に変換できる</div></div>
                 </details>
-              </div>
-            </div>
+              </div></div>
           </details>
           <details class="details">
             <summary class="summary">ポリオミノ4のヒント</summary>
-            <div class="answer">
-              <div class="answerInner">1度解いて、もう一度指示通りに解く
+            <div class="answer"><div class="answerInner">1度解いて、もう一度指示通りに解く
                 <details class="details">
                   <summary class="summary">追加ヒント</summary>
-                  <div class="answer">
-                    <div class="answerInner">赤のミノをポリオミノ1に</div>
-                  </div>
+                  <div class="answer"><div class="answerInner">赤のミノをポリオミノ1に</div></div>
                 </details>
-              </div>
-            </div>
+              </div></div>
           </details>
-        </div>
-      </div>
+        </div></div>
     </details>
 
   </div>
 
   <script>
-    // 元のロジックに合わせた per-<details> ハンドラ版（これが安定して正しく動く挙動でした）
-    document.addEventListener("DOMContentLoaded", () => {
-      document.querySelectorAll(".details").forEach(el => {
-        const summary = el.querySelector(".summary");
-        const answer = el.querySelector(".answer");
+    // 各 <details> に個別 handler（元のロジックを踏襲）＋アニメーションロックで
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.details').forEach(el => {
+        const summary = el.querySelector('.summary');
+        const answer = el.querySelector('.answer');
 
-        // もし answer が存在しなければ何もしない
         if (!summary || !answer) return;
 
-        summary.addEventListener("click", event => {
-          // 親へのバブリングを止め、既定の <details> の toggle を止める（自前制御）
-          event.stopPropagation();
-          event.preventDefault();
+        // 初期スタイルクリア（念のため）
+        answer.style.overflow = 'hidden';
 
-          const isOpen = el.hasAttribute("open");
+        summary.addEventListener('click', (ev) => {
+          ev.stopPropagation();
+          ev.preventDefault();
+
+          // ロックがかかっていたら無視（アニメーション中の二重トグル防止）
+          if (el._animating) return;
+
+          const isOpen = el.hasAttribute('open');
 
           if (isOpen) {
-            // 閉じる処理
-            const currentHeight = answer.scrollHeight;
-            answer.style.height = currentHeight + "px";
-
-            // アニメーションスタート
+            // close
+            el._animating = true;
+            const currentH = answer.scrollHeight;
+            answer.style.height = currentH + 'px';
+            // 次フレームで 0 にする
             requestAnimationFrame(() => {
-              answer.style.transition = "height 0.3s ease, opacity 0.25s ease";
-              answer.style.height = "0px";
-              answer.style.opacity = "0";
+              answer.style.transition = 'height 0.32s ease, opacity 0.22s ease';
+              answer.style.height = '0px';
+              answer.style.opacity = '0';
             });
 
-            // 終了したら open 属性を外し、内部の open も閉じ、スタイルをクリア
-            const onEnd = () => {
-              el.removeAttribute("open");
-              el.querySelectorAll(".details[open]").forEach(child => child.removeAttribute("open"));
-              answer.style.removeProperty("height");
-              answer.style.removeProperty("transition");
-              answer.style.removeProperty("opacity");
-              answer.removeEventListener("transitionend", onEnd);
+            const onEnd = (e) => {
+              // height のトランジション完了で処理（opacity と区別）
+              if (e && e.propertyName && e.propertyName !== 'height') return;
+              // 子を閉じる（状態リセット）
+              el.querySelectorAll('.details[open]').forEach(child => child.removeAttribute('open'));
+              el.removeAttribute('open');
+              // style cleanup
+              answer.style.removeProperty('height');
+              answer.style.removeProperty('transition');
+              answer.style.removeProperty('opacity');
+              el._animating = false;
+              answer.removeEventListener('transitionend', onEnd);
             };
-            answer.addEventListener("transitionend", onEnd);
+            answer.addEventListener('transitionend', onEnd);
 
           } else {
-            // 開く処理
-            el.setAttribute("open", "true");
-            // 初期は 0 → scrollHeight にアニメーション
-            answer.style.height = "0px";
-            answer.style.opacity = "0";
-
+            // open
+            el._animating = true;
+            // 先に open 属性を付ける（ネストした open 状態が反映される）
+            el.setAttribute('open', '');
+            // prepare
+            answer.style.height = '0px';
+            answer.style.opacity = '0';
+            // measure and animate
             requestAnimationFrame(() => {
-              const targetHeight = answer.scrollHeight;
-              answer.style.transition = "height 0.3s ease, opacity 0.25s ease";
-              answer.style.height = targetHeight + "px";
-              answer.style.opacity = "1";
+              const target = answer.scrollHeight;
+              answer.style.transition = 'height 0.32s ease, opacity 0.22s ease';
+              answer.style.height = target + 'px';
+              answer.style.opacity = '1';
             });
 
-            const onEndOpen = () => {
-              // 自由に伸縮するよう高さを解除（auto）
-              answer.style.removeProperty("height");
-              answer.style.removeProperty("transition");
-              answer.removeEventListener("transitionend", onEndOpen);
+            const onEndOpen = (e) => {
+              if (e && e.propertyName && e.propertyName !== 'height') return;
+              // auto にして自由に伸縮
+              answer.style.removeProperty('height');
+              answer.style.removeProperty('transition');
+              el._animating = false;
+              answer.removeEventListener('transitionend', onEndOpen);
             };
-            answer.addEventListener("transitionend", onEndOpen);
+            answer.addEventListener('transitionend', onEndOpen);
           }
         });
       });
     });
   </script>
 </body>
-
 </html>
