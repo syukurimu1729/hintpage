@@ -4,7 +4,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>脱出ゲーム ヒント一覧</title>
+	<title>魔法学校からの脱出 ～双子が残した奇跡～</title>
 
 	<!-- 古風なセリフ体を読み込み（表示環境に依存します） -->
 	<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Noto+Serif+JP:wght@300;400;700&display=swap" rel="stylesheet">
@@ -46,7 +46,7 @@
 
 		h1 { 
 			text-align: center;
-			margin-bottom: -0.6rem;
+			margin-bottom: -1.0rem;
 			font-size: clamp(1.1rem, 6vw, 2.4rem);
 			letter-spacing: 0.04em;
 			font-family: "Cormorant Garamond", Georgia, serif;
@@ -56,11 +56,25 @@
 		h2 { 
 			text-align: center;
 			margin-bottom: 1rem;
-			font-size: clamp(0.8rem, 4.5vw, 1.4rem);
+			font-size: clamp(0.9rem, 5vw, 1.8rem);
 			letter-spacing: 0.02em;
 			color: var(--muted);
 			font-weight: 600;
 		}
+		/* 英語サブタイトル（小さめ・1行） */
+		.subtitleEN {
+		  margin-top: 4px;
+		  margin-bottom: 0;
+		  font-size: clamp(0.72rem, 1.6vw, 0.92rem); /* 小さめでレスポンシブ */
+		  color: rgba(43,34,24,0.72);
+		  font-style: italic;
+		  font-weight: 500;
+		  text-align: center;
+		  white-space: nowrap;       /* 折り返さない（1行で完結） */
+		  overflow: hidden;         /* 万が一長すぎたときに溢れない */
+		  text-overflow: ellipsis;  /* 幅を超えたら省略記号にする（必要なら） */
+		}
+
 		.explain {
 			margin-top: 0.5rem;
 			margin-bottom: -0.5rem;
@@ -173,245 +187,181 @@
 </head>
 
 <body>
-	<h1>コスモシアからの脱出</h1>
-	<h2>Escape from Cosmosia</h2>
+	<h1>魔法学校からの脱出</h1>
+	<h2>～双子が残した奇跡～</h2>
+	<h3 class="subtitleEN">Escape from Magic School — The Miracle Left by the Twins</h3>
     <h2 class="explain">
-        これはコスモシアからの脱出のヒントページです<br>
+        これは魔法学校からの脱出のヒントページです<br>
         チーム内全体でヒントを見ることを決めてから見てください
     </h2>
 	<div class="container">
+
+		<!-- 地下封印室への入り方 -->
 		<details class="details">
-			<summary class="summary">居住モジュールへの入り方</summary>
+			<summary class="summary">地下封印室への入り方</summary>
 			<div class="answer">
-				<div class="answerInner">Q1からQ4を解き、データベースからキーを入手する
-					<details class="details">
-						<summary class="summary">Q1のヒント</summary>
-						<div class="answer">
-							<div class="answerInner">線を記号同士でつなげ</div>
-						</div>
-					</details>
-					<details class="details">
-						<summary class="summary">Q2のヒント</summary>
-						<div class="answer">
-							<div class="answerInner">展開図を組み立てろ</div>
-						</div>
-					</details>
-					<details class="details">
-						<summary class="summary">Q3のヒント</summary>
-						<div class="answer">
-							<div class="answerInner">50音表を考えろ</div>
-						</div>
-					</details>
-					<details class="details">
-						<summary class="summary">Q4のヒント</summary>
-						<div class="answer">
-							<div class="answerInner">イラストを文字に直せ</div>
-						</div>
-					</details>
-					<details class="details">
-						<summary class="summary">キー入手</summary>
-						<div class="answer">
-							<div class="answerInner">頭とは、頭文字のこと
-								<details class="details">
-									<summary class="summary">追加ヒント</summary>
-									<div class="answer">
-										<div class="answerInner">頭文字をデータベースから探し、その中の文字がキー</div>
-									</div>
-								</details>
-							</div>
-						</div>
-					</details>
-                </details>
-					<details class="details">
-						<summary class="summary">居住モジュールの謎</summary>
-						<div class="answer">
-							<div class="answerInner">日誌を読み、指示に従い、暗号化されたファイルを解読して情報を得る
-								<details class="details">
-									<summary class="summary">◇のヒント</summary>
-									<div class="answer">
-										<div class="answerInner">イラストを文字に直して当てはめろ</div>
-									</div>
-								</details>
-								<details class="details">
-									<summary class="summary">〇のヒント</summary>
-									<div class="answer">
-										<div class="answerInner">猫は英語でCAT
-											<details class="details">
-												<summary class="summary">追加ヒント</summary>
-												<div class="answer">
-													<div class="answerInner">3番目のアルファベットはC</div>
-												</div>
-											</details>
-										</div>
-									</div>
-								</details>
-								<details class="details">
-									<summary class="summary">△のヒント</summary>
-									<div class="answer">
-										<div class="answerInner">スマホの日本語入力</div>
-									</div>
-								</details>
-								<details class="details">
-									<summary class="summary">×のヒント</summary>
-									<div class="answer">
-										<div class="answerInner">四角の状態は、矢印によって対比を表されている
-											<details class="details">
-												<summary class="summary">追加ヒント</summary>
-												<div class="answer">
-													<div class="answerInner">見えないものを見るには、表面だけでなく裏面も重要</div>
-												</div>
-											</details>
-										</div>
-									</div>
-								</details>
-								<details class="details">
-									<summary class="summary">メモのヒント</summary>
-									<div class="answer">
-										<div class="answerInner">足し算の繰り上げは1しかありえない
-											<details class="details">
-												<summary class="summary">追加ヒント</summary>
-												<div class="answer">
-													<div class="answerInner">bを足しても変わらないならbは？</div>
-												</div>
-											</details>
-										</div>
-									</div>
-								</details>
-								<details class="details">
-									<summary class="summary">電源のヒント</summary>
-									<div class="answer">
-										<div class="answerInner">日誌の裏にあるのが配線
-											<details class="details">
-												<summary class="summary">追加ヒント</summary>
-												<div class="answer">
-													<div class="answerInner">正しい色は、ラッキーカラー</div>
-												</div>
-											</details>
-										</div>
-									</div>
-								</details>
-								<details class="details">
-									<summary class="summary">解読のヒント</summary>
-									<div class="answer">
-										<div class="answerInner">◇と〇を合わせて、穴に入った文字を読め</div>
-									</div>
-								</details>
-							</div>
-						</div>
-					</details>
-					<details class="details">
-						<summary class="summary">実験モジュールへの入り方</summary>
-						<div class="answer">
-							<div class="answerInner">Q5からQ8を解き、データベースからキーを入手する
-								<details class="details">
-									<summary class="summary">Q5のヒント</summary>
-									<div class="answer">
-										<div class="answerInner">1年は12か月
-											<details class="details">
-												<summary class="summary">追加ヒント</summary>
-												<div class="answer">
-													<div class="answerInner">3月は英語でmarch</div>
-												</div>
-											</details>
-										</div>
-									</div>
-								</details>
-								<details class="details">
-									<summary class="summary">Q6のヒント</summary>
-									<div class="answer">
-										<div class="answerInner">1つめのイラストはしょうじ</div>
-									</div>
-								</details>
-								<details class="details">
-									<summary class="summary">Q7のヒント</summary>
-									<div class="answer">
-										<div class="answerInner">「こ」に上の矢印で「け」になる
-											<details class="details">
-												<summary class="summary">追加ヒント</summary>
-												<div class="answer">
-													<div class="answerInner">3月は英語でmarch</div>
-												</div>
-											</details>
-										</div>
-									</div>
-								</details>
-								<details class="details">
-									<summary class="summary">Q8のヒント</summary>
-									<div class="answer">
-										<div class="answerInner">ローマ字と記号から考えろ</div>
-									</div>
-								</details>
-								<details class="details">
-									<summary class="summary">キー入手のヒント</summary>
-									<div class="answer">
-										<div class="answerInner">頭は同じ、その文字を繋げたとき、繋げた線を通る文字は</div>
-									</div>
-								</details>
-							</div>
-						</div>
-					</details>
-					<details class="details">
-						<summary class="summary">実験モジュールの謎</summary>
-						<div class="answer">
-							<div class="answerInner">RNA配列を解き、ウイルスとワクチンのサンプルを得る
-								<details class="details">
-									<summary class="summary">解読のヒント</summary>
-									<div class="answer">
-										<div class="answerInner">暗いところで星は見れる</div>
-									</div>
-								</details>
-								<details class="details">
-									<summary class="summary">翻訳のヒント</summary>
-									<div class="answer">
-										<div class="answerInner">周りに初めからヒントはある</div>
-									</div>
-								</details>
-							</div>
-						</div>
-					</details>
-                    <details class="details">
-						<summary class="summary">コックピットへの入り方</summary>
-						<div class="answer">
-							<div class="answerInner">コックピットのコードを入手する
-								<details class="details">
-									<summary class="summary">手がかりへのヒント</summary>
-									<div class="answer">
-										<div class="answerInner">コックピットにも裏面はある</div>
-									</div>
-								</details>
-								<details class="details">
-									<summary class="summary">秘密のキーのヒント</summary>
-									<div class="answer">
-										<div class="answerInner">
-                                            RNA配列はQ1からQ8の模様に隠されている
-											<details class="details">
-												<summary class="summary">追加ヒント</summary>
-												<div class="answer">
-													<div class="answerInner">色からRNA配列に変換できる</div>
-												</div>
-											</details>
-										</div>
-									</div>
-								</details>
-                                <details class="details">
-									<summary class="summary">ポリオミノ4のヒント</summary>
-									<div class="answer">
-										<div class="answerInner">
-                                            1度解いて、もう一度指示通りに解く
-                                            <details class="details">
-												<summary class="summary">追加ヒント</summary>
-												<div class="answer">
-													<div class="answerInner">赤のミノをポリオミノ1に</div>
-												</div>
-											</details>
-                                        </div>
-									</div>
-								</details>
-							</div>
-						</div>
-					</details>
+				<div class="answerInner">
+地下封印室へ行くための謎を解き、地下の階段へ行く
+
+<details class="details">
+  <summary class="summary">記号の合わせ方</summary>
+  <div class="answer"><div class="answerInner">記号は同じものは全部重なるように、でも向きは考えなくてもいい</div></div>
+</details>
+
+<details class="details">
+  <summary class="summary">読み方</summary>
+  <div class="answer"><div class="answerInner">例では右に向けて読む方法、右上に向けて読むときも2マス飛ばしで</div></div>
+</details>
+
 				</div>
-				<script>
+			</div>
+		</details>
+
+		<!-- 地下封印室の謎 -->
+		<details class="details">
+			<summary class="summary">地下封印室の謎</summary>
+			<div class="answer">
+				<div class="answerInner">
+地下封印室にあった手がかりをもとに、魔法を使えるようになる
+
+<details class="details">
+  <summary class="summary">本のありか</summary>
+  <div class="answer"><div class="answerInner">実際に地図の場所へ行って、何かないか見てみる</div></div>
+</details>
+
+<details class="details">
+  <summary class="summary">本の謎</summary>
+  <div class="answer"><div class="answerInner">
+それぞれの本の謎のヒント
+
+<details class="details">
+  <summary class="summary">No.1のヒント</summary>
+  <div class="answer"><div class="answerInner">矢印に重なるまで進んで、重なったらその向きに方向転換する</div></div>
+</details>
+
+<details class="details">
+  <summary class="summary">No.2のヒント</summary>
+  <div class="answer"><div class="answerInner">例えば4と7と23を選べれば、クローバーと太陽と合わせて1列にそろう
+<details class="details">
+  <summary class="summary">追加ヒント</summary>
+  <div class="answer"><div class="answerInner">この記号、どこかで重ねたような...?</div></div>
+</details>
+</div></div>
+</details>
+
+<details class="details">
+  <summary class="summary">No.3のヒント</summary>
+  <div class="answer"><div class="answerInner">このバラバラになったものをきれいにそろえる方法は...</div></div>
+</details>
+
+<details class="details">
+  <summary class="summary">No.4のヒント</summary>
+  <div class="answer"><div class="answerInner">りんご　ごりら　らっぱ...
+<details class="details">
+  <summary class="summary">追加ヒント</summary>
+  <div class="answer"><div class="answerInner">この世界では、ランタンの次はけんでもいい</div></div>
+</details>
+</div></div>
+</details>
+
+<details class="details">
+  <summary class="summary">No.5のヒント</summary>
+  <div class="answer"><div class="answerInner">エとウの記号の一つ目は同じ。この二つの共通点は...?
+<details class="details">
+  <summary class="summary">追加ヒント</summary>
+  <div class="answer"><div class="answerInner">すべてのひらがなを二つの要素に分解するには...?</div></div>
+</details>
+</div></div>
+</details>
+
+  </div></div>
+</details>
+
+			<!-- シンボルの探し方 -->
+			<details class="details">
+				<summary class="summary">シンボルの探し方</summary>
+				<div class="answer">
+					<div class="answerInner">
+実際に本がある場所を立体的に考えて、つなげてみると...?
+
+<details class="details">
+  <summary class="summary">1つ目のシンボル</summary>
+  <div class="answer"><div class="answerInner">この地図は各階を分けて、上から見たもの
+では、これを重ね合わせると...?</div></div>
+</details>
+
+<details class="details">
+  <summary class="summary">2つ目のシンボル</summary>
+  <div class="answer"><div class="answerInner">横から見たものとして、これをもう一度重ね合わせる<br>
+一度横からの図として書き出してみたほうがいいかも...?</div></div>
+</details>
+
+<details class="details">
+  <summary class="summary">魔法を使うか迷ったとき</summary>
+  <div class="answer"><div class="answerInner">封印がうまくいけば、呪いは消えるからお守りはいらなくなるはず</div></div>
+</details>
+
+					</div>
+				</div>
+			</details>
+</div></div>
+</details>
+
+		<!-- 封印した後（トップレベル） -->
+		<details class="details">
+			<summary class="summary">封印した後</summary>
+			<div class="answer">
+				<div class="answerInner">
+学校は壊れたままだけど、確かに呪いは消えた
+赤を消せば何か変わるかも...?
+
+<details class="details">
+  <summary class="summary">正しい世界とは</summary>
+  <div class="answer"><div class="answerInner">正しい世界とはすべての赤い歪みが消えた世界のこと</div></div>
+</details>
+
+<details class="details">
+  <summary class="summary">本の謎</summary>
+  <div class="answer"><div class="answerInner">本の赤い部分が見えないものとして解きなおせばうまくいきそう
+
+<details class="details">
+  <summary class="summary">赤い部分がない本</summary>
+  <div class="answer"><div class="answerInner">赤い色を失ってしまった本の本来の色を取り戻せないだろうか？
+
+<details class="details">
+  <summary class="summary">No.4の本</summary>
+  <div class="answer"><div class="answerInner">この紙全体に書かれているのは、そもそも何？</div></div>
+</details>
+
+
+
+</div></div>
+</details>
+
+		<!-- 魔法が使えないとき -->
+		<details class="details">
+			<summary class="summary">魔法が使えないとき</summary>
+			<div class="answer">
+				<div class="answerInner">すべての赤い歪みが消えた、正しい世界でないと魔法は使えないようだ</div>
+			</div>
+		</details>
+
+		<!-- 最後の魔法 -->
+		<details class="details">
+			<summary class="summary">最後の魔法</summary>
+			<div class="answer">
+				<div class="answerInner">
+<details class="details">
+  <summary class="summary">もう1つのおまもりのありか</summary>
+  <div class="answer"><div class="answerInner">赤いおまもり、これを呪われていないものにするには...?</div></div>
+</details>
+				</div>
+			</div>
+		</details>
+
+	</div>
+
+	<script>
                     document.addEventListener("DOMContentLoaded", () => {
                       document.querySelectorAll(".details").forEach(el => {
                         const summary = el.querySelector(".summary");
